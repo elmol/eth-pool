@@ -27,6 +27,7 @@ contract ETHPool {
     }
 
     function _deposit() internal {
+        require(msg.value > 0, "Deposit must be greater than 0");
         balance[msg.sender] = msg.value;
 
         emit Deposit(msg.sender, msg.value);

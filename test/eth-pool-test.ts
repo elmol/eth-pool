@@ -90,4 +90,16 @@ describe("ETHPool", () => {
       .to.emit(pool, "Withdraw")
       .withArgs(alice.address, ONE_ETH);
   });
+
+  it("Should revert a 0 deposit transaction", async () => {
+    await expect(pool.deposit({ value: 0 })).to.be.revertedWith(
+      "Deposit must be greater than 0"
+    );
+  });
+
+  it("Should revert a 0 transfer transaction", async () => {
+    await expect(
+      alice.sendTransaction({ to: pool.address })
+    ).to.be.revertedWith("Deposit must be greater than 0");
+  });
 });

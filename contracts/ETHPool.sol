@@ -7,7 +7,7 @@ contract ETHPool {
     event Deposit(address from, uint256 value);
     event Withdraw(address from, uint256 value);
 
-    mapping(address => uint256) private balance;
+    mapping(address => uint256) public balance;
 
     function deposit() external payable {
         _deposit();
@@ -19,8 +19,9 @@ contract ETHPool {
 
     function withdraw() external {
         uint256 toTransfer = balance[msg.sender];
+        require(toTransfer > 0, "No ETH to withdraw");
+        
         balance[msg.sender] = 0;
-
         payable(msg.sender).transfer(toTransfer);
 
         emit Withdraw(msg.sender, toTransfer);

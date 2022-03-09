@@ -33,6 +33,7 @@ describe("ETHPool", () => {
         value: ONE_ETH,
       })
     ).to.changeEtherBalance(alice, ONE_ETH.mul(-1), { includeFee: false });
+    expect(await pool.balance(alice.address)).to.be.equal(ONE_ETH);
   });
 
   it("Should allow to withdraw eth from any account with enough eth", async () => {
@@ -101,5 +102,21 @@ describe("ETHPool", () => {
     await expect(
       alice.sendTransaction({ to: pool.address })
     ).to.be.revertedWith("Deposit must be greater than 0");
+  });
+
+  it("Should revert a withdraw transaction from an account with 0 balance", async () => {
+    await expect(pool.withdraw()).to.be.revertedWith("No ETH to withdraw");
+  });
+
+  it("Balance for an account should be 0 after withdraw", async () => {
+    // alice deposit
+    await pool.deposit({
+      value: ONE_ETH,
+    });
+
+    // alice withdraw
+    pool.withdraw();
+
+    expect(await pool.balance(alice.address)).to.be.equal(0);
   });
 });

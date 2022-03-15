@@ -1,20 +1,22 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ETHPool {
+contract ETHPool is Ownable {
     event Deposit(address from, uint256 value);
     event Withdraw(address from, uint256 value);
 
     mapping(address => uint256) public balance;
+  
+    receive() external payable {
+        _deposit();
+    }
 
     function deposit() external payable {
         _deposit();
     }
-
-    receive() external payable {
-        _deposit();
+    function depositRewards() external payable onlyOwner {
     }
 
     function withdraw() external {

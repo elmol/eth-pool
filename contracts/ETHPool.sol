@@ -8,7 +8,7 @@ contract ETHPool is Ownable {
     event Withdraw(address from, uint256 value);
 
     mapping(address => uint256) public balance;
-  
+
     receive() external payable {
         _deposit();
     }
@@ -16,13 +16,16 @@ contract ETHPool is Ownable {
     function deposit() external payable {
         _deposit();
     }
+
     function depositRewards() external payable onlyOwner {
+        // @dev pool is empty if balance is 0 before deposit rewards
+        require(address(this).balance > msg.value, "Pool is empty");
     }
 
     function withdraw() external {
         uint256 toTransfer = balance[msg.sender];
         require(toTransfer > 0, "No ETH to withdraw");
-        
+
         balance[msg.sender] = 0;
         payable(msg.sender).transfer(toTransfer);
 

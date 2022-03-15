@@ -136,13 +136,23 @@ describe("ETHPool", () => {
   });
 
   it("Should allow to the team deposit rewards to the pool", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    expect(await ethers.provider.getBalance(pool.address), ONE_ETH.toString());
+
     await expect(() =>
       pool.connect(team).depositRewards({
         value: ONE_ETH,
       })
     ).to.changeEtherBalance(team, ONE_ETH.mul(-1), { includeFee: false });
 
-    expect(await ethers.provider.getBalance(pool.address), ONE_ETH.toString());
+    expect(
+      await ethers.provider.getBalance(pool.address),
+      ONE_ETH.mul(2).toString()
+    );
   });
 
   it("Should deposit rewards be reverted if not team", async () => {
@@ -151,5 +161,14 @@ describe("ETHPool", () => {
         value: ONE_ETH,
       })
     ).to.be.revertedWith("Ownable: caller is not the owner");
+  });
+
+  it("Should deposit rewards should be reverted if the pool is empty", async () => {
+    expect(await ethers.provider.getBalance(pool.address), "1");
+    await expect(
+      pool.connect(team).depositRewards({
+        value: ONE_ETH,
+      })
+    ).to.be.revertedWith("Pool is empty");
   });
 });

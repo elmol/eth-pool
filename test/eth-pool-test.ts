@@ -141,17 +141,15 @@ describe("ETHPool", () => {
       value: ONE_ETH,
     });
 
-    expect(await ethers.provider.getBalance(pool.address), ONE_ETH.toString());
-
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(ONE_ETH);
     await expect(() =>
       pool.connect(team).depositRewards({
         value: ONE_ETH,
       })
     ).to.changeEtherBalance(team, ONE_ETH.mul(-1), { includeFee: false });
 
-    expect(
-      await ethers.provider.getBalance(pool.address),
-      ONE_ETH.mul(2).toString()
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(
+      ONE_ETH.mul(2)
     );
   });
 
@@ -164,11 +162,80 @@ describe("ETHPool", () => {
   });
 
   it("Should deposit rewards should be reverted if the pool is empty", async () => {
-    expect(await ethers.provider.getBalance(pool.address), "1");
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
     await expect(
       pool.connect(team).depositRewards({
         value: ONE_ETH,
       })
     ).to.be.revertedWith("Pool is empty");
+  });
+  it("Should alice withdraw all pool (reward + deposit) when is the only participant in the pool", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    // team deposit rewards
+    await pool.connect(team).depositRewards({
+      value: ONE_ETH,
+    });
+
+    // alice withdraw
+    await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
+      alice,
+      ONE_ETH.mul(2),
+      {
+        includeFee: false,
+      }
+    );
+
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
+  });
+
+  it("Should rewards be proportionally shared between alice and bob", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    // bob deposit
+    await pool.connect(bob).deposit({
+      value: ONE_ETH,
+    });
+
+    // team deposit rewards
+    await pool.connect(team).depositRewards({
+      value: ONE_ETH.mul(2), // 2 eth
+    });
+
+    // alice balance
+    expect(await pool.connect(alice).balance(alice.address)).to.be.equal(
+      ONE_ETH.mul(2)
+    );
+
+    // bob balance
+    expect(await pool.connect(bob).balance(bob.address)).to.be.equal(
+      ONE_ETH.mul(2)
+    );
+
+    // alice withdraw
+    await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
+      alice,
+      ONE_ETH.mul(2),
+      {
+        includeFee: false,
+      }
+    );
+
+    // bob withdraw
+    await expect(() => pool.connect(bob).withdraw()).to.changeEtherBalance(
+      bob,
+      ONE_ETH.mul(2),
+      {
+        includeFee: false,
+      }
+    );
+
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
   });
 });

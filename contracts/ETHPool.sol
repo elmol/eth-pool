@@ -10,8 +10,6 @@ contract ETHPool is Ownable {
     using SafeMath for uint256;
     using EnumerableSet for EnumerableSet.AddressSet;
 
-    uint256 private constant SHARE_RATIO_PRECISION = 10000;
-
     event Deposit(address from, uint256 value);
     event Withdraw(address from, uint256 value);
 
@@ -38,9 +36,10 @@ contract ETHPool is Ownable {
         for (uint256 index = 0; index < participantsAmount; index++) {
             address participant = participants.at(index);
             uint256 currentBalance = balance[participant];
-            uint256 share = _calculateShareRate(poolBalance, currentBalance);
-            uint256 newBalance = currentBalance.add(_calculateShareAmount(msg.value, share));
-            balance[participant] = newBalance;
+            
+            //amountToShare = totalRewards * participantBalance / poolBalance
+            uint256 amountToShare = msg.value.mul(currentBalance).div(poolBalance);
+            balance[participant] = currentBalance.add(amountToShare);
         }
     }
 
@@ -61,20 +60,5 @@ contract ETHPool is Ownable {
         participants.add(msg.sender);
 
         emit Deposit(msg.sender, msg.value);
-    }
-
-    function _calculateShareRate(
-        uint256 poolBalance,
-        uint256 participantBalance
-    ) internal pure returns (uint256) {
-        return participantBalance.mul(SHARE_RATIO_PRECISION).div(poolBalance);
-    }
-
-    function _calculateShareAmount(uint256 toShare, uint256 shareRatio)
-        internal
-        pure
-        returns (uint256)
-    {
-        return shareRatio.mul(toShare).div(SHARE_RATIO_PRECISION);
     }
 }

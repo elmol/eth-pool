@@ -238,4 +238,62 @@ describe("ETHPool", () => {
 
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
   });
+
+  it("Should bob not withdraw rewards if deposited after team deposit rewards", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    // team deposit rewards
+    await pool.connect(team).depositRewards({
+      value: ONE_ETH.mul(2), // 2 eth
+    });
+
+    // bob deposit
+    await pool.connect(bob).deposit({
+      value: ONE_ETH,
+    });
+
+    // alice balance
+    expect(await pool.connect(alice).balance(alice.address)).to.be.equal(
+      ONE_ETH.mul(3)
+    );
+
+    // bob balance
+    expect(await pool.connect(bob).balance(bob.address)).to.be.equal(
+      ONE_ETH.mul(1)
+    );
+
+    // alice withdraw
+    await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
+      alice,
+      ONE_ETH.mul(3),
+      {
+        includeFee: false,
+      }
+    );
+
+    // bob withdraw
+    await expect(() => pool.connect(bob).withdraw()).to.changeEtherBalance(
+      bob,
+      ONE_ETH.mul(1),
+      {
+        includeFee: false,
+      }
+    );
+  });
+
+  it("Should revert on 0 deposit rewards", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    await expect(
+      pool.connect(team).depositRewards({
+        value: 0,
+      })
+    ).to.be.revertedWith("Deposit must be greater than 0");
+  });
 });

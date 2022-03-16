@@ -37,7 +37,7 @@ describe("ETHPool", () => {
     expect(await pool.balance(alice.address)).to.be.equal(ONE_ETH);
   });
 
-  it("Should allow to withdraw eth from any account with enough eth", async () => {
+  it("Should allow to withdraw ethers from any account with enough funds", async () => {
     await pool.connect(alice).deposit({
       value: ONE_ETH,
     });
@@ -50,7 +50,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should allow only withdraw what the account deposit", async () => {
+  it("Should allow only withdraw what the account deposited", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -68,7 +68,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should allow only withdraw what the account transfer", async () => {
+  it("Should allow only withdraw what the account transferred", async () => {
     // alice deposit
     alice.sendTransaction({ to: pool.address, value: ONE_ETH });
     // bob deposit
@@ -84,7 +84,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should emit a Deposit event when an account deposit ethers", async () => {
+  it("Should emit a Deposit event when an account deposits ethers", async () => {
     await expect(
       pool.connect(alice).deposit({
         value: ONE_ETH,
@@ -94,7 +94,7 @@ describe("ETHPool", () => {
       .withArgs(alice.address, ONE_ETH);
   });
 
-  it("Should emit a Withdraw event when an account withdraw ethers", async () => {
+  it("Should emit a Withdraw event when an account withdraws ethers", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -123,7 +123,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should account balance be 0 after withdraw", async () => {
+  it("Should leave the account balance at 0 after a withdrawal", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -135,7 +135,7 @@ describe("ETHPool", () => {
     expect(await pool.connect(alice).balance(alice.address)).to.be.equal(0);
   });
 
-  it("Should allow to the team deposit rewards to the pool", async () => {
+  it("Should allow the team to deposit rewards into the pool", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -153,7 +153,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should deposit rewards be reverted if not team", async () => {
+  it("Should revert if the rewards deposit is not made by the team", async () => {
     await expect(
       pool.connect(alice).depositRewards({
         value: ONE_ETH,
@@ -161,7 +161,7 @@ describe("ETHPool", () => {
     ).to.be.revertedWith("Ownable: caller is not the owner");
   });
 
-  it("Should deposit rewards should be reverted if the pool is empty", async () => {
+  it("Should revert if the rewards deposit is done in an empty pool", async () => {
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
     await expect(
       pool.connect(team).depositRewards({
@@ -169,7 +169,7 @@ describe("ETHPool", () => {
       })
     ).to.be.revertedWith("Pool is empty");
   });
-  it("Should alice withdraw all pool (reward + deposit) when is the only participant in the pool", async () => {
+  it("Should allow a single participant to withdraw the entire rewards", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -192,7 +192,7 @@ describe("ETHPool", () => {
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
   });
 
-  it("Should rewards be proportionally shared between alice and bob", async () => {
+  it("Should be able to share rewards proportionally between all participants", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -239,7 +239,7 @@ describe("ETHPool", () => {
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
   });
 
-  it("Should bob not withdraw rewards if deposited after team deposit rewards", async () => {
+  it("Should not allow withdrawal of rewards awarded prior to deposit", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,
@@ -284,7 +284,7 @@ describe("ETHPool", () => {
     );
   });
 
-  it("Should revert on 0 deposit rewards", async () => {
+  it("Should revert rewards deposits with 0 value", async () => {
     // alice deposit
     await pool.connect(alice).deposit({
       value: ONE_ETH,

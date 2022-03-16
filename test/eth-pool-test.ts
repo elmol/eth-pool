@@ -22,13 +22,13 @@ describe("ETHPool", () => {
     // initialized
   });
 
-  it("should allow to transfer ethers from any account", async () => {
+  it("Should allow to transfer ethers from any account", async () => {
     await expect(() =>
       alice.sendTransaction({ to: pool.address, value: ONE_ETH })
     ).to.changeEtherBalance(alice, ONE_ETH.mul(-1), { includeFee: false });
   });
 
-  it("should allow to deposit ethers from any account", async () => {
+  it("Should allow to deposit ethers from any account", async () => {
     await expect(() =>
       pool.connect(alice).deposit({
         value: ONE_ETH,
@@ -295,5 +295,20 @@ describe("ETHPool", () => {
         value: 0,
       })
     ).to.be.revertedWith("Deposit must be greater than 0");
+  });
+
+  it("Should emit a Deposit Rewards event when rewards are deposit", async () => {
+    // alice deposit
+    await pool.connect(alice).deposit({
+      value: ONE_ETH,
+    });
+
+    await expect(
+      pool.connect(team).depositRewards({
+        value: ONE_ETH,
+      })
+    )
+      .to.emit(pool, "DepositRewards")
+      .withArgs(team.address, ONE_ETH);
   });
 });

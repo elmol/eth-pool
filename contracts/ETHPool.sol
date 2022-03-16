@@ -12,6 +12,7 @@ contract ETHPool is Ownable {
 
     event Deposit(address from, uint256 value);
     event Withdraw(address from, uint256 value);
+    event DepositRewards(address from, uint256 value);
 
     EnumerableSet.AddressSet private participants;
     mapping(address => uint256) public balance;
@@ -36,11 +37,15 @@ contract ETHPool is Ownable {
         for (uint256 index = 0; index < participantsAmount; index++) {
             address participant = participants.at(index);
             uint256 currentBalance = balance[participant];
-            
+
             //amountToShare = totalRewards * participantBalance / poolBalance
-            uint256 amountToShare = msg.value.mul(currentBalance).div(poolBalance);
+            uint256 amountToShare = msg.value.mul(currentBalance).div(
+                poolBalance
+            );
             balance[participant] = currentBalance.add(amountToShare);
         }
+
+        emit DepositRewards(msg.sender, msg.value);
     }
 
     function withdraw() external {

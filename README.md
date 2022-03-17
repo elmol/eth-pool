@@ -12,9 +12,23 @@ Participants are not able to do partial withdrawals.
 
 EHT Pool contract is not stoppable.
 
-## Deployed at  KOVAN
+## Deployed at KOVAN
+```
 ETHPool deployed to: 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f with Team address: 0x45756fED107d0aEA575a2dc0d49a1c5156b0b796
+```
+## Verification at KOVAN
 
+```
+$ npx hardhat verify --network kovan 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f
+Nothing to compile
+No need to generate any newer typings.
+Successfully submitted source code for contract
+contracts/ETHPool.sol:ETHPool at 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract ETHPool on Etherscan.
+https://kovan.etherscan.io/address/0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f#code
+`` 
 ## Test Coverage
 ```
 --------------|----------|----------|----------|----------|----------------|

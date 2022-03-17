@@ -13,7 +13,16 @@ Participants are not able to do partial withdrawals.
 EHT Pool contract is not stoppable.
 
 ## Test Coverage
-
+```
+--------------|----------|----------|----------|----------|----------------|
+File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------|----------|----------|----------|----------|----------------|
+ contracts/   |      100 |      100 |      100 |      100 |                |
+  ETHPool.sol |      100 |      100 |      100 |      100 |                |
+--------------|----------|----------|----------|----------|----------------|
+All files     |      100 |      100 |      100 |      100 |                |
+--------------|----------|----------|----------|----------|----------------|
+```
 ## Hardhat commands
 
 Advanced Sample Hardhat Project was used as project started, so you can the following documentation

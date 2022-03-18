@@ -3,7 +3,9 @@ import { expect } from "chai";
 import { Contract } from "ethers";
 import { ethers } from "hardhat";
 
-const ONE_ETH = ethers.utils.parseEther("1");
+const ONE_ETH = ethers.constants.One;
+const TWO_ETH = ethers.constants.Two;
+const NEGATIVE_ONE_ETH = ethers.constants.NegativeOne;
 
 describe("ETHPool", () => {
   let pool: Contract;
@@ -25,7 +27,7 @@ describe("ETHPool", () => {
   it("Should allow to transfer ethers from any account", async () => {
     await expect(() =>
       alice.sendTransaction({ to: pool.address, value: ONE_ETH })
-    ).to.changeEtherBalance(alice, ONE_ETH.mul(-1), { includeFee: false });
+    ).to.changeEtherBalance(alice, NEGATIVE_ONE_ETH, { includeFee: false });
   });
 
   it("Should allow to deposit ethers from any account", async () => {
@@ -33,7 +35,7 @@ describe("ETHPool", () => {
       pool.connect(alice).deposit({
         value: ONE_ETH,
       })
-    ).to.changeEtherBalance(alice, ONE_ETH.mul(-1), { includeFee: false });
+    ).to.changeEtherBalance(alice, NEGATIVE_ONE_ETH, { includeFee: false });
     expect(await pool.balance(alice.address)).to.be.equal(ONE_ETH);
   });
 
@@ -146,11 +148,9 @@ describe("ETHPool", () => {
       pool.connect(team).depositRewards({
         value: ONE_ETH,
       })
-    ).to.changeEtherBalance(team, ONE_ETH.mul(-1), { includeFee: false });
+    ).to.changeEtherBalance(team, NEGATIVE_ONE_ETH, { includeFee: false });
 
-    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(
-      ONE_ETH.mul(2)
-    );
+    expect(await ethers.provider.getBalance(pool.address)).to.be.equal(TWO_ETH);
   });
 
   it("Should revert if the rewards deposit is not made by the team", async () => {
@@ -183,7 +183,7 @@ describe("ETHPool", () => {
     // alice withdraw
     await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
       alice,
-      ONE_ETH.mul(2),
+      TWO_ETH,
       {
         includeFee: false,
       }
@@ -205,23 +205,21 @@ describe("ETHPool", () => {
 
     // team deposit rewards
     await pool.connect(team).depositRewards({
-      value: ONE_ETH.mul(2), // 2 eth
+      value: TWO_ETH, // 2 eth
     });
 
     // alice balance
     expect(await pool.connect(alice).balance(alice.address)).to.be.equal(
-      ONE_ETH.mul(2)
+      TWO_ETH
     );
 
     // bob balance
-    expect(await pool.connect(bob).balance(bob.address)).to.be.equal(
-      ONE_ETH.mul(2)
-    );
+    expect(await pool.connect(bob).balance(bob.address)).to.be.equal(TWO_ETH);
 
     // alice withdraw
     await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
       alice,
-      ONE_ETH.mul(2),
+      TWO_ETH,
       {
         includeFee: false,
       }
@@ -230,7 +228,7 @@ describe("ETHPool", () => {
     // bob withdraw
     await expect(() => pool.connect(bob).withdraw()).to.changeEtherBalance(
       bob,
-      ONE_ETH.mul(2),
+      TWO_ETH,
       {
         includeFee: false,
       }
@@ -247,7 +245,7 @@ describe("ETHPool", () => {
 
     // team deposit rewards
     await pool.connect(team).depositRewards({
-      value: ONE_ETH.mul(2), // 2 eth
+      value: TWO_ETH, // 2 eth
     });
 
     // bob deposit

@@ -28,7 +28,7 @@ for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract ETHPool on Etherscan.
 https://kovan.etherscan.io/address/0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f#code
-`` 
+``` 
 ## Test Coverage
 ```
 --------------|----------|----------|----------|----------|----------------|

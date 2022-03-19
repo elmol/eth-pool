@@ -29,20 +29,20 @@ EHT Pool contract is not stoppable.
 
 ## Deployed at KOVAN
 ```
-ETHPool deployed to: 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f with Team address: 0x45756fED107d0aEA575a2dc0d49a1c5156b0b796
+ETHPool deployed to: 0xa0c7bD356f54f1d80D978f13598fCF9F1aBd941f with Team address: 0x45756fED107d0aEA575a2dc0d49a1c5156b0b796
 ```
 ## Verification at KOVAN
 
 ```
-$ npx hardhat verify --network kovan 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f
+$ npx hardhat verify --network kovan 0xa0c7bD356f54f1d80D978f13598fCF9F1aBd941f
 Nothing to compile
 No need to generate any newer typings.
 Successfully submitted source code for contract
-contracts/ETHPool.sol:ETHPool at 0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f
+contracts/ETHPool.sol:ETHPool at 0xa0c7bD356f54f1d80D978f13598fCF9F1aBd941f
 for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract ETHPool on Etherscan.
-https://kovan.etherscan.io/address/0x447Ca2Dccfd0f1D88AE7984fAc85574EF551d05f#code
+https://kovan.etherscan.io/address/0xa0c7bD356f54f1d80D978f13598fCF9F1aBd941f#code
 ``` 
 ## Test Coverage
 ```

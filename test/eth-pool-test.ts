@@ -120,7 +120,7 @@ describe("ETHPool", () => {
 
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(ONE_ETH);
     await expect(() =>
-      pool.connect(team).depositRewards({ value: ONE_ETH })
+      pool.connect(team).distribute({ value: ONE_ETH })
     ).to.changeEtherBalance(team, NEGATIVE_ONE_ETH, { includeFee: false });
 
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(TWO_ETH);
@@ -128,14 +128,14 @@ describe("ETHPool", () => {
 
   it("Should revert if the rewards deposit is not made by the team", async () => {
     await expect(
-      pool.connect(alice).depositRewards({ value: ONE_ETH })
+      pool.connect(alice).distribute({ value: ONE_ETH })
     ).to.be.revertedWith("Ownable: caller is not the owner");
   });
 
   it("Should revert if the rewards deposit is done in an empty pool", async () => {
     expect(await ethers.provider.getBalance(pool.address)).to.be.equal(0);
     await expect(
-      pool.connect(team).depositRewards({ value: ONE_ETH })
+      pool.connect(team).distribute({ value: ONE_ETH })
     ).to.be.revertedWith("Pool is empty");
   });
   it("Should allow a single participant to withdraw the entire rewards", async () => {
@@ -143,7 +143,7 @@ describe("ETHPool", () => {
     await pool.connect(alice).deposit({ value: ONE_ETH });
 
     // team deposit rewards
-    await pool.connect(team).depositRewards({ value: ONE_ETH });
+    await pool.connect(team).distribute({ value: ONE_ETH });
 
     // alice withdraw
     await expect(() => pool.connect(alice).withdraw()).to.changeEtherBalance(
@@ -163,7 +163,7 @@ describe("ETHPool", () => {
     await pool.connect(bob).deposit({ value: ONE_ETH });
 
     // team deposit rewards
-    await pool.connect(team).depositRewards({ value: TWO_ETH });
+    await pool.connect(team).distribute({ value: TWO_ETH });
 
     // alice balance
     expect(await pool.connect(alice).balance(alice.address)).to.be.equal(
@@ -195,7 +195,7 @@ describe("ETHPool", () => {
     await pool.connect(alice).deposit({ value: ONE_ETH });
 
     // team deposit rewards
-    await pool.connect(team).depositRewards({ value: TWO_ETH });
+    await pool.connect(team).distribute({ value: TWO_ETH });
 
     // bob deposit
     await pool.connect(bob).deposit({ value: ONE_ETH });
@@ -228,7 +228,7 @@ describe("ETHPool", () => {
     await pool.connect(alice).deposit({ value: ONE_ETH });
 
     await expect(
-      pool.connect(team).depositRewards({ value: 0 })
+      pool.connect(team).distribute({ value: 0 })
     ).to.be.revertedWith("Deposit must be greater than 0");
   });
 
@@ -236,7 +236,7 @@ describe("ETHPool", () => {
     // alice deposit
     await pool.connect(alice).deposit({ value: ONE_ETH });
 
-    await expect(pool.connect(team).depositRewards({ value: ONE_ETH }))
+    await expect(pool.connect(team).distribute({ value: ONE_ETH }))
       .to.emit(pool, "DepositRewards")
       .withArgs(team.address, ONE_ETH);
   });

@@ -45,7 +45,7 @@ contract ETHPool is Ownable {
      * @dev Only team can deposit rewards.
      *  The pool should not be emtpy.
      */
-    function depositRewards() external payable onlyOwner {
+    function distribute() external payable onlyOwner {
         require(msg.value > 0, "Deposit must be greater than 0");
         require(totalSupply > 0, "Pool is empty");
 

@@ -40,6 +40,26 @@ File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
 All files     |      100 |      100 |      100 |      100 |                |
 --------------|----------|----------|----------|----------|----------------|
 ```
+# Gas Report
+```
+·-------------------------------|----------------------------|-------------|-----------------------------·
+|      Solc version: 0.8.4      ·  Optimizer enabled: false  ·  Runs: 200  ·  Block limit: 30000000 gas  │
+································|····························|·············|······························
+|  Methods                                                                                               │
+·············|··················|·············|··············|·············|···············|··············
+|  Contract  ·  Method          ·  Min        ·  Max         ·  Avg        ·  # calls      ·  usd (avg)  │
+·············|··················|·············|··············|·············|···············|··············
+|  ETHPool   ·  deposit         ·      94894  ·      111994  ·     108194  ·           18  ·          -  │
+·············|··················|·············|··············|·············|···············|··············
+|  ETHPool   ·  depositRewards  ·      36177  ·       44771  ·      37405  ·            7  ·          -  │
+·············|··················|·············|··············|·············|···············|··············
+|  ETHPool   ·  withdraw        ·      40771  ·       49168  ·      44307  ·           19  ·          -  │
+·············|··················|·············|··············|·············|···············|··············
+|  Deployments                  ·                                          ·  % of limit   ·             │
+································|·············|··············|·············|···············|··············
+|  ETHPool                      ·          -  ·           -  ·    1028866  ·        3.4 %  ·          -  │
+·-------------------------------|-------------|--------------|-------------|---------------|-------------·
+```
 ## Hardhat commands
 
 Advanced Sample Hardhat Project was used as project started, so you can the following documentation
@@ -90,3 +110,47 @@ Advanced Sample Hardhat Project was used as project started, so you can the foll
 ># Performance optimizations
 >
 >For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the >environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see >[the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+
+https://ethresear.ch/t/efficient-onchain-reward-distribution-pooled-payments-dividends/1924
+
+http://batog.info/papers/scalable-reward-distribution.pdf
+
+https://solidity-by-example.org/defi/staking-rewards/
+https://github.com/Synthetixio/synthetix/blob/develop/contracts/StakingRewards.sol
+
+1. https://www.youtube.com/watch?v=6ZO5aYg1GI8
+2. https://www.youtube.com/watch?v=LWWsjw3cgDk
+3. https://www.youtube.com/watch?v=YqpRwJDz3xg
+4. https://www.youtube.com/watch?v=pFX1-kNrJFU
+
+Synthetix Staking Rewards Contract Explained - Part 1 - More Math | DeFi
+
+3K views
+5 months ago
+
+Smart Contract Programmer
+This video explains how to derive another form of the same equation to calculate staking rewards.
+
+6:54
+NOW PLAYING
+Synthetix Staking Rewards Contract Explained - Part 2 - Algorithm | DeFi
+
+2.6K views
+5 months ago
+
+Smart Contract Programmer
+This video explains how the Synthetix StakingRewards contract efficiently calculated rewards of stakers without using for loops.
+
+5:22
+NOW PLAYING
+
+WATCH LATER
+ADD TO QUEUE
+Synthetix Staking Rewards Contract Explained - Part 3 - Code | DeFi
+
+3.3K views
+5 months ago
+
+
+//foreach over array
+https://hackernoon.com/implementing-staking-in-solidity-1687302a82cf
